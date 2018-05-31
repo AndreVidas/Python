@@ -100,13 +100,16 @@ if __name__ == "__main__":
     while(cont):
         board.printBoard()
         print("move player:", players.getPlayer())
-        x = input("x-coord: ")
-        y = input("y-coord: ")
+        x = int(input("x-coord: "))
+        y = int(input("y-coord: "))
         
-        if board.isTaken(int(x),int(y)):
+        x -= 1
+        y -= 1
+        
+        if board.isTaken(x,y):
             print("Coordinate already taken. Please take make another move.")
         else:
-            board.setPeice(int(x),int(y),players.getPlayer())
+            board.setPeice(x,y,players.getPlayer())
             if board.hasWon(players.getPlayer()):
                 board.printBoard()
                 print("Player", players.getPlayer(), "has won!!")
