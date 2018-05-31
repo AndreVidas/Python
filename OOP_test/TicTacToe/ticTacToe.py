@@ -16,13 +16,22 @@ import numpy as np
 class Board:
     
     def __init__(self):
-        self.board = np.array([["","",""],["","",""],["","",""]])
+        self.board = np.array([[" "," "," "],[" "," "," "],[" "," "," "]])
     
     def resetBoard(self):
         Board.__init__(self)
     
-    def getBoard(self):
-        print(self.board)
+    def printBoard(self):
+        print("-------------")
+        print("|",self.board[0,0],"|",self.board[0,1],"|",self.board[0,2],"|")
+        print("-------------")
+        print("|",self.board[1,0],"|",self.board[1,1],"|",self.board[1,2],"|")
+        print("-------------")
+        print("|",self.board[2,0],"|",self.board[2,1],"|",self.board[2,2],"|")
+        print("-------------")
+
+
+        #print(self.board)
     
     def setPeice(self, x, y, player):
         self.board[x,y] = player 
@@ -31,13 +40,13 @@ class Board:
     def isFull(self):
         for i in range(0,3):
             for j in range(0,3):
-                if self.board[i,j] == "":
+                if self.board[i,j] == " ":
                     return False
         return True
 
     
     def isTaken(self, x, y):
-        if self.board[x,y] != '':
+        if self.board[x,y] != " ":
             return True
         else:
             return False
@@ -89,7 +98,7 @@ if __name__ == "__main__":
     players = Player()
     cont = True
     while(cont):
-        board.getBoard()
+        board.printBoard()
         print("move player:", players.getPlayer())
         x = input("x-coord: ")
         y = input("y-coord: ")
@@ -99,8 +108,8 @@ if __name__ == "__main__":
         else:
             board.setPeice(int(x),int(y),players.getPlayer())
             if board.hasWon(players.getPlayer()):
-                board.getBoard()
-                print("Player ", players.getPlayer(), "has won!!")
+                board.printBoard()
+                print("Player", players.getPlayer(), "has won!!")
                 cont = False
             elif board.isFull():
                 print("Draw")
@@ -129,7 +138,7 @@ spil = Board()
 #spil.resetBoard()
 spil.setPeice(1,2,"x")
 spil.setPeice(2,2, "o")
-spil.getBoard()
+spil.printBoard()
 
 print("Is (1,2) taken? ", spil.isTaken(1,2))
 print("Is (0,2) taken? ", spil.isTaken(0,2))
@@ -142,17 +151,17 @@ spil.setPeice(2,0, "o")
 spil.setPeice(2,1, "o")        
 spil.setPeice(0,2, "o")        
 spil.setPeice(0,1, "o")
-spil.getBoard()
+spil.printBoard()
 print(spil.isFull())
 
 spil.resetBoard()
-spil.getBoard()
+spil.printBoard()
 
 print(spil.hasWon("x"))
 spil.setPeice(0,0,"x")
 spil.setPeice(0,1,"x")
 spil.setPeice(0,2,"x")
-spil.getBoard()
+spil.printBoard()
 print(spil.hasWon("x"))
 print(spil.hasWon("o"))
 
@@ -160,34 +169,34 @@ print(spil.hasWon("o"))
 
 
 spil.resetBoard()
-spil.getBoard()
+spil.printBoard()
 
 spil.setPeice(0,0,"x")
 spil.setPeice(1,0,"x")
 spil.setPeice(2,0,"x")
-spil.getBoard()
+spil.printBoard()
 print(spil.hasWon("x"))
 print(spil.hasWon("o"))
 
 
 spil.resetBoard()
-spil.getBoard()
+spil.printBoard()
 
 spil.setPeice(0,0,"x")
 spil.setPeice(1,1,"x")
 spil.setPeice(2,2,"x")
-spil.getBoard()
+spil.printBoard()
 print(spil.hasWon("x"))
 print(spil.hasWon("o"))
 
 
 spil.resetBoard()
-spil.getBoard()
+spil.printBoard()
 
 spil.setPeice(2,0,"x")
 spil.setPeice(1,1,"x")
 spil.setPeice(0,2,"x")
-spil.getBoard()
+spil.printBoard()
 print(spil.hasWon("x"))
 print(spil.hasWon("o"))
 
