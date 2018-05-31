@@ -100,8 +100,8 @@ if __name__ == "__main__":
     while(cont):
         board.printBoard()
         print("move player:", players.getPlayer())
-        x = int(input("x-coord: "))
-        y = int(input("y-coord: "))
+        x = int(input("row: "))
+        y = int(input("col: "))
         
         x -= 1
         y -= 1
