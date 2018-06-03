@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def Kmeans(data, K):
+def Kmeans1(data, K):
 
     
     # pick K random centroids 
@@ -63,6 +63,42 @@ def Kmeans(data, K):
     return K_coord, np.hstack((data,np.asarray(label).reshape(data.shape[0],1)))
 
 
+def Kmeans2(data, K):
+    K_coord = np.random.rand(K,2)*10
+    
+    epsilon = 0.1 # iteration treshold
+    diff = 100 
+    while(epsilon < diff):
+        label = []
+        sumCoords = np.zeros([data.shape[0], 2*K])
+        #### find label for each data point and find new centriod 
+        for i in range(data.shape[0]):
+            dist = []
+            for j in range(K):
+                # calculate euclidian distance from each data point to centriod
+                dist.append(np.sqrt( (data[i,0] - K_coord[j,0])**2 + (data[i,1] - K_coord[j,1])**2 ))
+        
+            # determine which centriod the given data point should be labelled with 
+            label.append(np.argmin(dist))
+            sumCoords[i,2*np.argmin(dist)] = data[i,0]
+            sumCoords[i,2*np.argmin(dist)+1] = data[i,1]
+    
+
+        new_K_coord = np.zeros([K,2]) # allocate data for new K centriod coordinates
+        for i in range(K):
+            countMembers = label.count(i)
+            # set new coordinates
+            new_K_coord[i,] = np.sum(sumCoords[:,2*i:(2*i+2)], axis = 0)/countMembers
+            
+        
+        # calculate differences between new and old centriod coordinates to be used for epsilon
+        diff = np.mean(abs(new_K_coord - K_coord))
+        K_coord = new_K_coord
+        
+    return K_coord, np.hstack((data,np.asarray(label).reshape(data.shape[0],1)))
+        
+        
+
 
 ### main ####
 #np.random.seed(8)
@@ -76,13 +112,38 @@ clust5 = np.hstack((np.asarray(np.random.normal(80, 1, 20)).reshape(20,1), np.as
 clust6 = np.hstack((np.asarray(np.random.normal(3, 1, 20)).reshape(20,1), np.asarray(np.random.normal(13, 1, 20)).reshape(20,1)))
 
 data = np.vstack((clust1,clust2,clust3,clust4,clust5,clust6))
+#data = np.vstack((clust1,clust2))
 
 
 
-
-kmeans, labelledData = Kmeans(data, 3)
-print(labelledData)
-print(kmeans)
+#kmeans, labelledData = KmeanBruteForce(data, 6)
+#kmeans, labelledData = Kmeans2(data,6)
+#print(labelledData)
+#print(kmeans)
 
 # plot test data
-plt.plot(data[:,0], data[:,1], 'ro', kmeans[:,0], kmeans[:,1], 'bo')
+#plt.plot(data[:,0], data[:,1], 'ro')
+#plt.plot(data[:,0], data[:,1], 'ro', kmeans[:,0], kmeans[:,1], 'bo')
+
+
+
+
+import time
+
+# generate test datas
+clust1 = np.hstack((np.asarray(np.random.normal(1, 1, 20000)).reshape(20000,1), np.asarray(np.random.normal(10, 1, 20000)).reshape(20000,1)))
+clust2 = np.hstack((np.asarray(np.random.normal(10, 1, 20000)).reshape(20000,1), np.asarray(np.random.normal(1, 1, 20000)).reshape(20000,1)))
+data = np.vstack((clust1,clust2))
+
+start = time.time()
+Kmeans2(data, 2)
+stop = time.time()
+print(stop-start)
+
+
+start = time.time()
+KmeansBruteForce(data, 2)
+stop = time.time()
+print(stop-start)
+
+
