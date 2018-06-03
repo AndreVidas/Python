@@ -15,7 +15,7 @@ def Kmeans1(data, K):
     # pick K random centroids 
     # TO BE CONTINUED... SEE IF THERE IS A BETTER WAY TO PICK RANDOM CENTRIOD COORDINATES
     #K_coord = np.hstack((np.asarray(np.random.normal(0, 10, K)).reshape(K,1), np.asarray(np.random.normal(0, 10, K)).reshape(K,1)))
-    K_coord = np.random.rand(K,2)*10
+    K_coord = np.random.rand(K,data.shape[1])*10
 
     
     epsilon = 0.1 # iteration threshold
@@ -27,9 +27,14 @@ def Kmeans1(data, K):
         for i in range(0,data.shape[0]):
             dist = []
             
-            for j in range(0,K_coord.shape[0]):    
+            for j in range(0,K_coord.shape[0]):
                 # calculate euclidian distance from each data point to centriod
-                dist.append(np.sqrt( (data[i,0] - K_coord[j,0])**2 + (data[i,1] - K_coord[j,1])**2 ))
+                innerPart = 0
+                for k in range(0,data.shape[1]):
+                    #dist.append(np.sqrt( (data[i,2*k] - K_coord[j,2*k])**2 + (data[i,2*k+1] - K_coord[j,2*k+1])**2 ))
+                    innerPart += (data[i,k] - K_coord[j,k])**2
+                
+                dist.append(np.sqrt(innerPart))
             
             # determine which centriod the given data point should be labelled with 
             label.append(np.argmin(dist))
@@ -37,9 +42,9 @@ def Kmeans1(data, K):
     
         # calculate new coordinates for each centroid by finding the
         # coordinate average for every data point labelled to the specific centroid 
-        new_K_coord = np.zeros([K,2]) # allocate data for new K centriod coordinates
+        new_K_coord = np.zeros([K,data.shape[1]]) # allocate data for new K centriod coordinates
         for i in range(0,K):
-            sumCoords = np.zeros([data.shape[0],2])
+            sumCoords = np.zeros([data.shape[0],data.shape[1]])
             countMembers = label.count(i)
 
             for j in range(0,data.shape[0]):
@@ -111,12 +116,13 @@ clust4 = np.hstack((np.asarray(np.random.normal(30, 1, 20)).reshape(20,1), np.as
 clust5 = np.hstack((np.asarray(np.random.normal(80, 1, 20)).reshape(20,1), np.asarray(np.random.normal(8, 1, 20)).reshape(20,1)))
 clust6 = np.hstack((np.asarray(np.random.normal(3, 1, 20)).reshape(20,1), np.asarray(np.random.normal(13, 1, 20)).reshape(20,1)))
 
-data = np.vstack((clust1,clust2,clust3,clust4,clust5,clust6))
-#data = np.vstack((clust1,clust2))
+#data = np.vstack((clust1,clust2,clust3,clust4,clust5,clust6))
+data = np.vstack((clust1,clust2))
 
 
 
-#kmeans, labelledData = KmeanBruteForce(data, 6)
+
+#kmeans, labelledData = Kmeans1(data, 2)
 #kmeans, labelledData = Kmeans2(data,6)
 #print(labelledData)
 #print(kmeans)
@@ -135,15 +141,30 @@ clust1 = np.hstack((np.asarray(np.random.normal(1, 1, 20000)).reshape(20000,1), 
 clust2 = np.hstack((np.asarray(np.random.normal(10, 1, 20000)).reshape(20000,1), np.asarray(np.random.normal(1, 1, 20000)).reshape(20000,1)))
 data = np.vstack((clust1,clust2))
 
-start = time.time()
-Kmeans2(data, 2)
-stop = time.time()
-print(stop-start)
+#start = time.time()
+#Kmeans2(data, 2)
+#stop = time.time()
+#print(stop-start)
 
 
-start = time.time()
-KmeansBruteForce(data, 2)
-stop = time.time()
-print(stop-start)
+#start = time.time()
+#Kmeans1(data, 2)
+#stop = time.time()
+#print(stop-start)
 
 
+
+
+
+
+# test for n-space implementation
+
+clust1 = np.hstack((np.asarray(np.random.normal(1, 1, 20)).reshape(20,1), np.asarray(np.random.normal(10, 1, 20)).reshape(20,1), np.asarray(np.random.normal(-10, 1, 20)).reshape(20,1), np.asarray(np.random.normal(-10, 1, 20)).reshape(20,1)))
+clust2 = np.hstack((np.asarray(np.random.normal(1, 1, 20)).reshape(20,1), np.asarray(np.random.normal(-10, 1, 20)).reshape(20,1), np.asarray(np.random.normal(10, 1, 20)).reshape(20,1), np.asarray(np.random.normal(10, 1, 20)).reshape(20,1)))
+
+data = np.vstack((clust1,clust2))
+
+kmeans, labelledData = Kmeans1(data, 2)
+
+print(kmeans)
+print(labelledData)
